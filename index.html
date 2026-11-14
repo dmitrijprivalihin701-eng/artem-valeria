@@ -197,7 +197,7 @@ body.locked{overflow:hidden}
   border:1px solid rgba(243,236,210,.55);animation:vring 2.4s ease-out infinite;pointer-events:none}
 @keyframes vring{from{transform:scale(.6);opacity:.9}to{transform:scale(1.5);opacity:0}}
 .venv.playing .vtxt,.venv.playing .vhint,.venv.playing .vring{opacity:0;animation:none}
-.venv .vphoto{position:absolute;z-index:2;border-radius:50%;overflow:hidden;opacity:0;transform:scale(.96);
+.venv .vphoto{position:absolute;z-index:2;overflow:hidden;opacity:0;transform:scale(.96);
   transition:opacity 1.2s ease,transform 1.6s cubic-bezier(.2,.8,.2,1);pointer-events:none;
   background:radial-gradient(120% 90% at 30% 20%,#ece3d2,#c2b08f 60%,#98846a);display:grid;place-items:center;color:#f7f0e2}
 .venv .vphoto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -440,8 +440,8 @@ section:nth-of-type(even){background:transparent!important}
   const fast = matchMedia('(prefers-reduced-motion: reduce)').matches;
   // овал стекла на последнем кадре: [центрX, центрY, rx, ry] в пикселях видео
   const SRC = {
-    m: { src: 'env-m.mp4', poster: 'env-m.jpg', w: 720, h: 1280, oval: [360, 629, 222, 272] },
-    d: { src: 'env-d.mp4', poster: 'env-d.jpg', w: 1280, h: 720, oval: [640, 351, 185, 227] }
+    m: { src: 'env-m.mp4', poster: 'env-m.jpg', w: 720, h: 1192, rect: [175, 212, 387, 657, 27] },
+    d: { src: 'env-d.mp4', poster: 'env-d.jpg', w: 1280, h: 720, rect: [529, 128, 234, 397, 16] }
   };
   const pick = () => (innerWidth / innerHeight > 1.05 ? SRC.d : SRC.m);
   let cur = pick();
@@ -450,9 +450,9 @@ section:nth-of-type(even){background:transparent!important}
 
   function place() {                       // ставим овал фото точно в стекло зеркала (object-fit: cover)
     const W = ov.clientWidth, H = ov.clientHeight, s = Math.max(W / cur.w, H / cur.h);
-    const ox = (W - cur.w * s) / 2, oy = (H - cur.h * s) / 2, [cx, cy, rx, ry] = cur.oval;
-    Object.assign(ph.style, { left: ox + (cx - rx) * s + 'px', top: oy + (cy - ry) * s + 'px', width: rx * 2 * s + 'px', height: ry * 2 * s + 'px' });
-    names.style.top = Math.min(H - 76, oy + (cy + ry) * s + (cur === SRC.m ? 135 : 60) * s) + 'px';
+    const ox = (W - cur.w * s) / 2, oy = (H - cur.h * s) / 2, [x, y, rw, rh, rr] = cur.rect;
+    Object.assign(ph.style, { left: ox + x * s + 'px', top: oy + y * s + 'px', width: rw * s + 'px', height: rh * s + 'px', borderRadius: rr * s + 'px' });
+    names.style.top = Math.min(H - 76, oy + (y + rh) * s + (cur === SRC.m ? 110 : 50) * s) + 'px';
   }
   place(); addEventListener('resize', place);
 
